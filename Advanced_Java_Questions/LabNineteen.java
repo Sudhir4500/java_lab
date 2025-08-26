@@ -1,64 +1,40 @@
 import java.sql.*;
 
 public class LabNineteen {
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/moviedb";
-    private static final String USER = "root";
-    private static final String PASS = "password";
-    
     public static void main(String[] args) {
         try {
-            // Load JDBC driver
+            // Load driver
             Class.forName("com.mysql.cj.jdbc.Driver");
             
-            // Establish connection
-            Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+            // Connect
+            Connection con = DriverManager.getConnection(
+                "jdbc:mysql://localhost:3306/testdb", "root", "root");
             
             // Create scrollable ResultSet
-            String sql = "SELECT * FROM MOVIE";
-            Statement stmt = conn.createStatement(
-                ResultSet.TYPE_SCROLL_INSENSITIVE,
-                ResultSet.CONCUR_READ_ONLY
-            );
+            Statement st = con.createStatement(
+                ResultSet.TYPE_SCROLL_INSENSITIVE, 
+                ResultSet.CONCUR_READ_ONLY);
             
-            ResultSet rs = stmt.executeQuery(sql);
+            ResultSet rs = st.executeQuery("SELECT * FROM students");
             
-            // Navigate to last row
-            if (rs.last()) {
-                System.out.println("Last row:");
-                System.out.println("ID: " + rs.getInt("id") + 
-                                 ", Title: " + rs.getString("title") + 
-                                 ", Genre: " + rs.getString("genre"));
-            }
+            // Go to last row
+            rs.last();
+            System.out.println("Last row: " + rs.getString("name"));
             
-            // Navigate to first row
-            if (rs.first()) {
-                System.out.println("\nFirst row:");
-                System.out.println("ID: " + rs.getInt("id") + 
-                                 ", Title: " + rs.getString("title") + 
-                                 ", Genre: " + rs.getString("genre"));
-            }
+            // Go to first row
+            rs.first();
+            System.out.println("First row: " + rs.getString("name"));
             
-            // Navigate to third row
-            if (rs.absolute(3)) {
-                System.out.println("\nThird row:");
-                System.out.println("ID: " + rs.getInt("id") + 
-                                 ", Title: " + rs.getString("title") + 
-                                 ", Genre: " + rs.getString("genre"));
-            }
+            // Go to 3rd row
+            rs.absolute(3);
+            System.out.println("Third row: " + rs.getString("name"));
             
-            rs.close();
-            stmt.close();
-            conn.close();
+            con.close();
             
-        } catch (ClassNotFoundException e) {
-            System.out.println("MySQL JDBC Driver not found!");
-            e.printStackTrace();
-        } catch (SQLException e) {
-            System.out.println("Database operation failed!");
-            e.printStackTrace();
+        } catch (Exception e) {
+            System.out.println("Error: " + e);
         }
         
-        // Print lab info
         System.out.println("\nLab No.: 19");
         System.out.println("Name: Sudhir Sharma");
         System.out.println("Roll No./Section: 53/B");
